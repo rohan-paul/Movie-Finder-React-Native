@@ -13,7 +13,7 @@ import NavigationService from './NavigationService'
 import axiosService from '../apiConfig/axiosService'
 const API_REF = require('../apiConfig/apiConfig')
 
-// To get Casts + gnere + runtime
+// Promise function to to get individual Movie's Casts + genere + runtime
 const getEachMovieDetailsGivenId = (id, index) => {
   return new Promise((resolve, reject) => {
     axios
@@ -23,13 +23,7 @@ const getEachMovieDetailsGivenId = (id, index) => {
       )
       .then(res => {
         let movieDetails = res.data
-        let result = pick(userProfileData, [
-          'login',
-          'bio',
-          'email',
-          'name',
-          'id',
-        ])
+        let result = pick(movieDetails, ['genres', 'runtime', 'casts'])
         if (
           result &&
           Object.entries(result).length !== 0 &&
