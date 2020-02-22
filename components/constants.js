@@ -12,7 +12,6 @@ export default function constants() {
     COLORS: {
       DEFAULT: '#172B4D',
       SECONDARY: '#F7FAFC',
-      LABEL: '#FE2472',
       INFO: '#11CDEF',
       ERROR: '#F5365C',
       SUCCESS: '#2DCE89',
@@ -27,13 +26,5 @@ export default function constants() {
       ICON: '#172B4D',
       BORDER: '#CAD1D7',
     },
-    bankDealsForProfileScreen: [
-      'https://res.cloudinary.com/dfu4cayex/image/upload/v1581360317/lloydsbanklogo_1.png',
-      'https://res.cloudinary.com/dfu4cayex/image/upload/v1581360317/rbs.jpg',
-      'https://res.cloudinary.com/dfu4cayex/image/upload/v1581359103/DB.jpg',
-      'https://res.cloudinary.com/dfu4cayex/image/upload/v1581360318/hsbc.webp',
-      'https://res.cloudinary.com/dfu4cayex/image/upload/v1581360317/citibank-logo-vector-400x400.png',
-      'https://res.cloudinary.com/dfu4cayex/image/upload/v1581862873/boa.jpg',
-    ],
   }
 }

@@ -5,10 +5,14 @@ import {
   LOADING_MORE,
   FILTERING,
 } from '../actions/types'
+import mockActionPayload from '../components/utils/lib/mockActionPayload'
 
+// DONT FORGET TO CHANGE BELOW TWO COMMENTED-OUT STATES BEFORE SUBMISSION
 const initialState = {
-  loading: true,
-  allUpcomingMovies: [],
+  loading: false,
+  // loading: true,
+  // allUpcomingMovies: [],
+  allUpcomingMovies: mockActionPayload,
   loadingMore: false,
   filtering: false,
   refreshing: false,
@@ -16,6 +20,7 @@ const initialState = {
 export default function(state = initialState, actions) {
   switch (actions.type) {
     case LOAD_ALL_UPCOMING_MOVIES:
+      // console.log('ACTIONS.PAYLOAD ', JSON.stringify(actions.payload))
       return {
         ...state,
         allUpcomingMovies: [...state.allUpcomingMovies, ...actions.payload],

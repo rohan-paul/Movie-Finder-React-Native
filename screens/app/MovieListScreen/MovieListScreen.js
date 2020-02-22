@@ -15,6 +15,7 @@ import axiosService from '../../../apiConfig/axiosService'
 const { width, height } = Dimensions.get('window')
 const API_REF = require('../../../apiConfig/apiConfig')
 import { loadAllUpcomingMovies } from '../../../actions/userGeneralActions'
+import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
 
 export class MovieListScreen extends Component {
   state = {
@@ -27,46 +28,19 @@ export class MovieListScreen extends Component {
     error: null,
   }
 
-  componentDidMount() {
-    // this.fetchUpcomingMovies()
+  // DONT FORGET TO CHANGE BELOW TWO COMMENTED-OUT functions BEFORE SUBMISSION
+
+  /* componentDidMount() {
     const page = this.state.page
     this.props.loadAllUpcomingMovies(page)
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.page !== this.state.page) {
-      // this.fetchUpcomingMovies()
       const page = this.state.page
       this.props.loadAllUpcomingMovies(page)
     }
-  }
-
-  fetchUpcomingMovies = () => {
-    const { page } = this.state
-    const URL = `${API_REF.API.INITIAL_UPCOMING_MOVIES}${page}&per_page=10`
-    // console.log('URL IS ', URL)
-
-    axiosService
-      .request({
-        url: URL,
-        method: 'GET',
-      })
-      .then(response => {
-        // console.log('RES ', response.data)
-        this.setState((prevState, nextProps) => ({
-          data:
-            page === 1
-              ? Array.from(response.data)
-              : [...this.state.data, ...response.data],
-          loading: false,
-          loadingMore: false,
-          refreshing: false,
-        }))
-      })
-      .catch(error => {
-        this.setState({ error, loading: false })
-      })
-  }
+  } */
 
   _handleRefresh = () => {
     this.setState(
@@ -88,7 +62,6 @@ export class MovieListScreen extends Component {
         loadingMore: true,
       }),
       () => {
-        // this.fetchUpcomingMovies()
         const page = this.state.page
         this.props.loadAllUpcomingMovies(page)
       },
@@ -117,10 +90,10 @@ export class MovieListScreen extends Component {
   }
 
   render() {
-    // return !this.state.loading ? (
     return !this.props.user.loading ? (
       <React.Fragment>
-        {console.log('FETCHED DATA ', this.props.user)}
+        {/* {console.log('FETCHED DATA ', this.props.user)} */}
+        <TopSearchBar></TopSearchBar>
         <FlatList
           contentContainerStyle={{}}
           numColumns={2}
@@ -132,7 +105,14 @@ export class MovieListScreen extends Component {
                 width: '50%',
               }}
             >
-              <MovieCard name={item.title} imageUrl={item.image_url} />
+              <MovieCard
+                name={item.title}
+                imageUrl={item.poster_path}
+                casts={item.castsArr}
+                genre={item.genreArr}
+                formattedRuntime={item.formattedRuntime}
+                vote_average={item.vote_average}
+              />
             </View>
           )}
           keyExtractor={item => item.image_url}

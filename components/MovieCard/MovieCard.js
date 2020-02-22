@@ -1,6 +1,6 @@
 import React from 'react'
 import { colors } from '../config/theme'
-import ContainedImage from '../ContainedImage/ContainedImage'
+import CardContents from '../CardContents/CardContents'
 import { StyleSheet } from 'react-native'
 import { View } from 'react-native'
 import {
@@ -10,10 +10,24 @@ import {
 } from '../../UtilsFunctions/UtilFunctions'
 import constants from '../constants'
 
-const MovieCard = ({ name, imageUrl }) => {
+const MovieCard = ({
+  name,
+  imageUrl,
+  casts,
+  genre,
+  formattedRuntime,
+  vote_average,
+}) => {
   return (
     <View style={styles.cardContainer}>
-      <ContainedImage name={name} imageUrl={imageUrl} />
+      <CardContents
+        name={name}
+        imageUrl={imageUrl}
+        casts={casts}
+        genre={genre}
+        formattedRuntime={formattedRuntime}
+        vote_average={vote_average}
+      />
     </View>
   )
 }
@@ -23,7 +37,7 @@ export default MovieCard
 const styles = StyleSheet.create({
   cardContainer: {
     height: ch(260),
-    width: cw(85),
+    width: cw(170),
     left: '7.5%',
     justifyContent: 'space-around',
   },
