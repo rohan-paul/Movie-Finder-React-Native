@@ -15,7 +15,8 @@ import axiosService from '../../../apiConfig/axiosService'
 const { width, height } = Dimensions.get('window')
 const API_REF = require('../../../apiConfig/apiConfig')
 import { loadAllUpcomingMovies } from '../../../actions/userGeneralActions'
-import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
+// import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
+import AutoCompleteSearchBar from '../../../components/TopSearchBar/AutoCompleteSearchBar'
 
 export class MovieListScreen extends Component {
   state = {
@@ -93,7 +94,7 @@ export class MovieListScreen extends Component {
     return !this.props.user.loading ? (
       <React.Fragment>
         {/* {console.log('FETCHED DATA ', this.props.user)} */}
-        <TopSearchBar></TopSearchBar>
+        <AutoCompleteSearchBar></AutoCompleteSearchBar>
         <FlatList
           contentContainerStyle={{}}
           numColumns={2}

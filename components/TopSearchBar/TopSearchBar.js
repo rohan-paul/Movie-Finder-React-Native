@@ -10,9 +10,6 @@ import constants from '../constants'
 import { SearchBar } from 'react-native-elements'
 
 const TopSearchBar = () => {
-  // state = {
-  //   search: '',
-  // };
   const [search, setsearch] = useState('')
 
   const updateSearch = search => {
@@ -20,9 +17,11 @@ const TopSearchBar = () => {
   }
   return (
     <SearchBar
-      placeholder="Type Here..."
+      placeholder="Search..."
       onChangeText={updateSearch}
       value={search}
+      containerStyle={styles.searchbarContainer}
+      inputContainerStyle={styles.inputContainer}
     />
   )
 }
@@ -30,12 +29,13 @@ const TopSearchBar = () => {
 export default TopSearchBar
 
 const styles = StyleSheet.create({
-  itemContainer: {
-    borderRadius: cw(10),
-    height: ch(270),
-    width: cw(170),
-    overflow: 'hidden',
+  searchbarContainer: {
+    backgroundColor: 'white',
     borderWidth: 1,
-    borderColor: 'rgba(38, 50, 70, 0.4)',
+  },
+  inputContainer: {
+    backgroundColor: constants().COLORS.MUTED,
+    borderWidth: 1,
+    borderRadius: 10,
   },
 })
