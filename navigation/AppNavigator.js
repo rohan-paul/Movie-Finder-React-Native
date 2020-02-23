@@ -4,12 +4,10 @@ import { createAppContainer } from 'react-navigation'
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch'
 import { Transition } from 'react-native-reanimated'
 import MovieListScreen from '../screens/app/MovieListScreen/MovieListScreen'
-import DrawerNavigator from './DrawerNavigator'
 import ShowSingleMovie from '../screens/app/ShowSingleMovie/ShowSingleMovie'
 
 const AppNavigator = createAnimatedSwitchNavigator(
   {
-    Main: DrawerNavigator,
     MovieListScreen: MovieListScreen,
     ShowSingleMovie: ShowSingleMovie,
   },

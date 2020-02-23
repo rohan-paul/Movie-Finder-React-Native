@@ -50,6 +50,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: constants().GREY,
     backgroundColor: constants().COLORS.MUTED,
+    shadowColor: constants().COLORS.PLACEHOLDER,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.62,
+    shadowRadius: 5.46,
+    elevation: 12,
   },
 
   movieImage: {

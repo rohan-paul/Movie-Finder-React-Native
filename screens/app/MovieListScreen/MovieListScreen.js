@@ -11,7 +11,6 @@ import {
   Text,
 } from 'react-native'
 import MovieCard from '../../../components/MovieCard/MovieCard'
-import { colors } from '../../../components/config/theme'
 import axiosService from '../../../apiConfig/axiosService'
 const { width, height } = Dimensions.get('window')
 const API_REF = require('../../../apiConfig/apiConfig')
@@ -20,9 +19,12 @@ import {
   loadMoviesFromUserSearchText,
   clearUserSearchText,
   loadMoreMoviesFromUserSameSearchText,
+  clearError,
 } from '../../../actions/userGeneralActions'
 import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
 import StandardLoader from '../../../components/StandardLoader'
+import SnackBar from 'react-native-snackbar-component'
+import constants from '../../../components/constants'
 
 export class MovieListScreen extends Component {
   state = {
@@ -34,8 +36,6 @@ export class MovieListScreen extends Component {
     refreshing: false,
     error: null,
   }
-
-  // DONT FORGET TO CHANGE BELOW TWO COMMENTED-OUT functions BEFORE SUBMISSION
 
   componentDidMount() {
     const page = this.state.page
@@ -49,7 +49,6 @@ export class MovieListScreen extends Component {
       prevProps.user.userSearchedMovieText.length !==
         this.props.user.userSearchedMovieText.length
     ) {
-      // console.log('COMP DID UPDATE GOT EXECUTED')
       const page = this.state.page
       let searchTerm = this.props.user.userSearchedMovieText
       this.props.loadMoviesFromUserSearchText(searchTerm, page)
@@ -122,10 +121,6 @@ export class MovieListScreen extends Component {
   render() {
     return !this.props.user.loading ? (
       <React.Fragment>
-        {/* {console.log(
-          'SEARCH FULL RESULT ',
-          JSON.stringify(this.props.user.moviesFromUserSearchText),
-        )} */}
         <TopSearchBar clearInput={this.clearInput}></TopSearchBar>
         <FlatList
           contentContainerStyle={{}}
@@ -173,9 +168,31 @@ export class MovieListScreen extends Component {
           onEndReachedThreshold={0.5}
           initialNumToRender={10}
         />
+        {this.props.user.error_while_fetching_movie_data ? (
+          <SnackBar
+            visible={this.props.user.error_while_fetching_movie_data}
+            textMessage="Error getting the data"
+            actionHandler={() => clearError()}
+            actionText="Close"
+            autoHidingTime={1000}
+            backgroundColor={constants().CLOUD_TEXT}
+          />
+        ) : null}
       </React.Fragment>
     ) : (
-      <StandardLoader></StandardLoader>
+      <>
+        <StandardLoader></StandardLoader>
+        {this.props.user.error_while_fetching_movie_data ? (
+          <SnackBar
+            visible={this.props.user.error_while_fetching_movie_data}
+            textMessage="Error getting the data"
+            actionHandler={() => this.props.clearError()}
+            actionText="Close"
+            autoHidingTime={1000}
+            backgroundColor={constants().CLOUD_TEXT}
+          />
+        ) : null}
+      </>
     )
   }
 }
@@ -186,6 +203,7 @@ MovieListScreen.propTypes = {
   loadMoviesFromUserSearchText: PropTypes.func,
   clearUserSearchText: PropTypes.func,
   loadMoreMoviesFromUserSameSearchText: PropTypes.func,
+  clearError: PropTypes.func,
 }
 const mapStateToProps = state => {
   return { user: state.user }
@@ -196,6 +214,7 @@ const mapDispatchToProps = {
   loadMoviesFromUserSearchText,
   clearUserSearchText,
   loadMoreMoviesFromUserSameSearchText,
+  clearError,
 }
 
 const styles = StyleSheet.create({
@@ -207,7 +226,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     marginTop: 10,
     marginBottom: 10,
-    borderColor: colors.veryLightPink,
+    borderColor: constants().COLORS.ERROR,
   },
 })
 

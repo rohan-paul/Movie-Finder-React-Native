@@ -23,14 +23,10 @@ const ShowSingleMovie = ({ route, navigation }) => {
   const onBackButtonPress = () => navigation.navigate('MovieListScreen')
   return (
     <View style={styles.parentContainer}>
-      {console.log('Props from route ', title)}
       <View style={styles.backButton}>
         <BackButton onPress={onBackButtonPress} />
       </View>
-      <View
-        style={styles.itemContainer}
-        // onPress={() => console.log('ITEM CLICKED IS ')}
-      >
+      <View style={styles.itemContainer}>
         <Image style={styles.movieImage} source={{ uri: poster_path }} />
         <View style={styles.detailsContainer}>
           <View style={styles.titleContainer}>
@@ -83,10 +79,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     width: '100%',
     height: '80%',
-    // justifyContent: 'center',
-    // textAlign: 'center',
     alignItems: 'center',
-    // overflow: 'hidden',
   },
 
   movieImage: {

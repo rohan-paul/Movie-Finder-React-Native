@@ -13,8 +13,8 @@ import {
   CLEAR_USER_SEARCH_TEXT,
   LOAD_ALL_USER_SEARCHED_MOVIES,
   LOAD_MORE_USER_SEARCHED_MOVIES,
+  CLEAR_ERROR,
 } from './types'
-import NavigationService from './NavigationService'
 import axiosService from '../apiConfig/axiosService'
 import { minsToHHMM, filterArr } from '../UtilsFunctions/UtilFunctions'
 const API_REF = require('../apiConfig/apiConfig')
@@ -132,14 +132,12 @@ export const loadAllUpcomingMovies = page => async dispatch => {
 
         allTopUpComingIndividualMovies
           .then(res => {
-            // console.log('SUCCESS')
             dispatch({
               type: LOAD_ALL_UPCOMING_MOVIES,
               payload: mergeArraysConditionally(upcomingMovies, res),
             })
           })
           .catch(err => {
-            console.log('ERROR IN FETCHING ALL allTopUpComingIndividualMovies ')
             dispatch({
               type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
               payload: error,
@@ -153,7 +151,6 @@ export const loadAllUpcomingMovies = page => async dispatch => {
         })
       })
   } catch (err) {
-    console.log('ERROR IS ', err)
     dispatch({
       type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
       payload: error,
@@ -217,14 +214,12 @@ export const loadMoviesFromUserSearchText = (
 
         allSearchResultIndividualMovies
           .then(res => {
-            // console.log('SEARCH RESULT RESPONSE ', res)
             dispatch({
               type: LOAD_ALL_USER_SEARCHED_MOVIES,
               payload: mergeArraysConditionally(searchResultMovies, res),
             })
           })
           .catch(err => {
-            console.log('ERROR IN FETCHING ALL allTopUpComingIndividualMovies ')
             dispatch({
               type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
               payload: error,
@@ -238,7 +233,6 @@ export const loadMoviesFromUserSearchText = (
         })
       })
   } catch (err) {
-    console.log('ERROR IS ', err)
     dispatch({
       type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
       payload: error,
@@ -297,7 +291,6 @@ export const loadMoreMoviesFromUserSameSearchText = (
             })
           })
           .catch(err => {
-            console.log('ERROR IN FETCHING ALL allTopUpComingIndividualMovies ')
             dispatch({
               type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
               payload: error,
@@ -311,10 +304,16 @@ export const loadMoreMoviesFromUserSameSearchText = (
         })
       })
   } catch (err) {
-    console.log('ERROR IS ', err)
     dispatch({
       type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
       payload: error,
     })
+  }
+}
+
+export const clearError = () => {
+  return {
+    type: CLEAR_ERROR,
+    payload: false,
   }
 }

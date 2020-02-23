@@ -84,7 +84,6 @@ module.exports = {
     let minutes = Math.floor(mins_num - (hours * 3600) / 60)
     let seconds = Math.floor(mins_num * 60 - hours * 3600 - minutes * 60)
 
-    // Appends 0 when unit is less than 10
     if (hours < 10) {
       hours = '0' + hours
     }

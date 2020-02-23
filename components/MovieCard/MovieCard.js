@@ -1,5 +1,4 @@
 import React from 'react'
-import { colors } from '../config/theme'
 import CardContents from '../CardContents/CardContents'
 import { StyleSheet } from 'react-native'
 import { View } from 'react-native'

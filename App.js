@@ -4,7 +4,7 @@ import rootReducers from './reducers'
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import reduxThunk from 'redux-thunk'
-import NavigationService from './actions/NavigationService'
+// import NavigationService from './actions/NavigationService'
 
 const store = createStore(rootReducers, {}, applyMiddleware(reduxThunk))
 
@@ -24,9 +24,9 @@ export default class App extends Component {
       <Provider store={store}>
         {/* Passing the NavigationService so to be able to navigate to different route in actions and reducers (i.e. any .js module outside of React component) */}
         <AppNavigator
-          ref={navigatorRef => {
-            NavigationService.setTopLevelNavigator(navigatorRef)
-          }}
+        // ref={navigatorRef => {
+        //   NavigationService.setTopLevelNavigator(navigatorRef)
+        // }}
         />
       </Provider>
     )
