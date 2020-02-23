@@ -4,6 +4,7 @@ import {
   LOAD_ALL_UPCOMING_MOVIES,
   LOADING_MORE,
   FILTERING,
+  START_USER_SEARCHING,
   USER_SEARCH_TEXT,
   CLEAR_USER_SEARCH_TEXT,
   LOAD_ALL_USER_SEARCHED_MOVIES,
@@ -38,13 +39,20 @@ export default function(state = initialState, actions) {
       // console.log('ACTIONS.PAYLOAD ', JSON.stringify(actions.payload))
       return {
         ...state,
-        moviesFromUserSearchText: [
-          ...state.moviesFromUserSearchText,
-          ...actions.payload,
-        ],
+        // moviesFromUserSearchText: [
+        //   ...state.moviesFromUserSearchText,
+        //   ...actions.payload,
+        // ],
+        moviesFromUserSearchText: actions.payload,
         loading: false,
         loadingMore: false,
         refreshing: false,
+      }
+
+    case START_USER_SEARCHING:
+      return {
+        ...state,
+        allUpcomingMovies: [],
       }
 
     case USER_SEARCH_TEXT:
@@ -56,6 +64,9 @@ export default function(state = initialState, actions) {
     case CLEAR_USER_SEARCH_TEXT:
       return {
         ...state,
+        loading: false,
+        loadingMore: false,
+        refreshing: false,
         userSearchedMovieText: actions.payload,
         moviesFromUserSearchText: [],
       }

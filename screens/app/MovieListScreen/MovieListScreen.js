@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { StyleSheet } from 'react-native'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import {
@@ -20,6 +21,7 @@ import {
   clearUserSearchText,
 } from '../../../actions/userGeneralActions'
 import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
+import StandardLoader from '../../../components/StandardLoader'
 
 export class MovieListScreen extends Component {
   state = {
@@ -43,29 +45,19 @@ export class MovieListScreen extends Component {
     if (
       // this.props.user.userSearchedMovieText.length !== 0 &&
       prevProps.user.userSearchedMovieText !==
-      this.props.user.userSearchedMovieText
+        this.props.user.userSearchedMovieText ||
+      prevProps.user.userSearchedMovieText.length !==
+        this.props.user.userSearchedMovieText.length
     ) {
-      console.log('COMP DID UPDATE GOT EXECUTED')
+      // console.log('COMP DID UPDATE GOT EXECUTED')
+      const page = this.state.page
       let searchTerm = this.props.user.userSearchedMovieText
-      this.props.loadMoviesFromUserSearchText(searchTerm)
+      this.props.loadMoviesFromUserSearchText(searchTerm, page)
     }
   }
 
   clearInput = () => {
-    this.setState(
-      {
-        page: 1,
-        refreshing: true,
-      },
-      () => {
-        this.props.clearUserSearchText()
-        const page = this.state.page
-        this.props.loadAllUpcomingMovies(page)
-      },
-    )
-  }
-
-  _handleRefresh = () => {
+    this.props.clearUserSearchText()
     this.setState(
       {
         page: 1,
@@ -78,7 +70,20 @@ export class MovieListScreen extends Component {
     )
   }
 
-  _handleLoadMore = () => {
+  handleRefresh = () => {
+    this.setState(
+      {
+        page: 1,
+        refreshing: true,
+      },
+      () => {
+        const page = this.state.page
+        this.props.loadAllUpcomingMovies(page)
+      },
+    )
+  }
+
+  handleLoadMore = () => {
     this.setState(
       (prevState, nextProps) => ({
         page: prevState.page + 1,
@@ -86,27 +91,22 @@ export class MovieListScreen extends Component {
       }),
       () => {
         const page = this.state.page
-        this.props.loadAllUpcomingMovies(page)
+        if (this.props.user.userSearchedMovieText.length === 0) {
+          this.props.loadAllUpcomingMovies(page)
+        } else {
+          let searchTerm = this.props.user.userSearchedMovieText
+          this.props.loadMoviesFromUserSearchText(searchTerm, page)
+        }
       },
     )
   }
 
-  _renderFooter = () => {
-    if (!this.state.loadingMore) return null
+  renderFooter = () => {
+    // if (!this.state.loadingMore) return null
+    if (!this.props.user.loadingMore) return null
 
     return (
-      <View
-        style={{
-          position: 'relative',
-          width: width,
-          height: height,
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          marginTop: 10,
-          marginBottom: 10,
-          borderColor: colors.veryLightPink,
-        }}
-      >
+      <View style={styles.activityIndicator}>
         <ActivityIndicator animating size="large" />
       </View>
     )
@@ -116,10 +116,10 @@ export class MovieListScreen extends Component {
     return !this.props.user.loading ? (
       <React.Fragment>
         {/* {console.log('FETCHED DATA ', this.props.user)} */}
-        {console.log(
+        {/* {console.log(
           'USER SEARCH TEXT ',
           this.props.user.userSearchedMovieText,
-        )}
+        )} */}
         {/* {console.log(
           'SEARCH FULL RESULT ',
           JSON.stringify(this.props.user.moviesFromUserSearchText),
@@ -128,9 +128,8 @@ export class MovieListScreen extends Component {
         <FlatList
           contentContainerStyle={{}}
           numColumns={2}
-          // data={this.props.user.allUpcomingMovies}
           data={
-            this.props.user.userSearchedMovieText.length === 0
+            this.props.user.moviesFromUserSearchText.length === 0
               ? this.props.user.allUpcomingMovies
               : this.props.user.moviesFromUserSearchText
           }
@@ -152,20 +151,16 @@ export class MovieListScreen extends Component {
             </View>
           )}
           keyExtractor={item => item.imdb_id}
-          // ListHeaderComponent={this._renderHeader}
-          ListFooterComponent={this._renderFooter}
-          onRefresh={this._handleRefresh}
-          refreshing={this.state.refreshing}
-          onEndReached={this._handleLoadMore}
+          ListFooterComponent={this.renderFooter}
+          onRefresh={this.handleRefresh}
+          refreshing={this.props.user.refreshing}
+          onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0.5}
           initialNumToRender={10}
         />
       </React.Fragment>
     ) : (
-      <View>
-        <Text style={{ alignSelf: 'center' }}>Loading Movies</Text>
-        <ActivityIndicator />
-      </View>
+      <StandardLoader></StandardLoader>
     )
   }
 }
@@ -185,5 +180,18 @@ const mapDispatchToProps = {
   loadMoviesFromUserSearchText,
   clearUserSearchText,
 }
+
+const styles = StyleSheet.create({
+  activityIndicator: {
+    position: 'relative',
+    width: width,
+    height: height,
+    paddingVertical: 20,
+    borderTopWidth: 1,
+    marginTop: 10,
+    marginBottom: 10,
+    borderColor: colors.veryLightPink,
+  },
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(MovieListScreen)

@@ -6,7 +6,7 @@ const API_REF = {
     INITIAL_UPCOMING_MOVIES: `upcoming?api_key=${API_KEY}&language=en-US&page=`,
     IMAGE_HOST: `https://image.tmdb.org/t/p/w500`,
     MOVIE_RATINGS: `https://api.themoviedb.org/4/movie/`,
-    DETAILS_MOVIE_TEXT_SEARCH: `https://api.themoviedb.org/3/movie/`,
+    DETAILS_MOVIE_TEXT_SEARCH: `https://api.themoviedb.org/3/search/movie?api_key=`,
   },
 }
 

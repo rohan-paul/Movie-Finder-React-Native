@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useSelector, useDispatch } from 'react-redux'
-import { Text, View } from 'react-native'
-import { StyleSheet } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 import {
   convert_width as cw,
   convert_height as ch,
@@ -28,7 +27,6 @@ const TopSearchBar = ({ clearInput }) => {
       <SearchBar
         placeholder="Search..."
         onChangeText={updateSearch}
-        // onClear={clearInput}
         onClear={() => clearInput()}
         value={user.userSearchedMovieText}
         clearIcon={{

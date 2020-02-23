@@ -93,4 +93,15 @@ module.exports = {
     }
     return hours + ':' + minutes
   },
+  filterArr: arr => {
+    return arr.filter(
+      i =>
+        i.id &&
+        i.poster_path &&
+        i.title &&
+        i.overview &&
+        i.vote_average &&
+        i.release_date,
+    )
+  },
 }

@@ -8,13 +8,14 @@ import {
   LOAD_ALL_UPCOMING_MOVIES,
   LOADING_MORE,
   FILTERING,
+  START_USER_SEARCHING,
   USER_SEARCH_TEXT,
   CLEAR_USER_SEARCH_TEXT,
   LOAD_ALL_USER_SEARCHED_MOVIES,
 } from './types'
 import NavigationService from './NavigationService'
 import axiosService from '../apiConfig/axiosService'
-import { minsToHHMM } from '../UtilsFunctions/UtilFunctions'
+import { minsToHHMM, filterArr } from '../UtilsFunctions/UtilFunctions'
 const API_REF = require('../apiConfig/apiConfig')
 const IMAGE_HOST = `https://image.tmdb.org/t/p/w500`
 
@@ -34,7 +35,6 @@ const mergeArraysConditionally = (listOfUpComingMovies, eachMovieDetails) => {
       eachMovieDetails.find(j => j.id === i.id),
     ),
   )
-  // return merged
   // Get some of the nested value
   let modArr = merged.map(i => {
     return {
@@ -99,7 +99,6 @@ export const loadAllUpcomingMovies = page => async dispatch => {
     })
 
     const URL = `${API_REF.API.INITIAL_UPCOMING_MOVIES}${page}`
-    // console.log('UREL IS ', URL)
 
     axiosService
       .request({
@@ -107,9 +106,8 @@ export const loadAllUpcomingMovies = page => async dispatch => {
         method: 'GET',
       })
       .then(async response => {
-        // console.log('response is ', response.data)
         let upcomingMovies = map(
-          response.data.results,
+          filterArr(response.data.results),
           partialRight(pick, [
             'id',
             'poster_path',
@@ -132,14 +130,7 @@ export const loadAllUpcomingMovies = page => async dispatch => {
 
         allTopUpComingIndividualMovies
           .then(res => {
-            // console.log(JSON.stringify(res))
-            // console.log('upcomingMovies', JSON.stringify(upcomingMovies))
-            // console.log('res', JSON.stringify(res))
-            // dispatch({
-            //   type: LOAD_ALL_UPCOMING_MOVIES,
-            //   payload: upcomingMovies,
-            // })
-            console.log('SUCCESS')
+            // console.log('SUCCESS')
             dispatch({
               type: LOAD_ALL_UPCOMING_MOVIES,
               payload: mergeArraysConditionally(upcomingMovies, res),
@@ -182,18 +173,23 @@ export const clearUserSearchText = () => {
   }
 }
 
-export const loadMoviesFromUserSearchText = searchTerm => async dispatch => {
+export const loadMoviesFromUserSearchText = (
+  searchTerm,
+  page,
+) => async dispatch => {
   try {
     dispatch({
-      type: LOADING,
+      type: START_USER_SEARCHING,
       payload: true,
     })
 
     // const URL = `${API_REF.API.INITIAL_UPCOMING_MOVIES}${page}`
 
-    const searchURL = `https://api.themoviedb.org/3/search/movie?api_key=659b6f94639ae8af21d0d09abc0b2cbc&language=en-US&page=1&query=${searchTerm}`
+    // const searchURL = `https://api.themoviedb.org/3/search/movie?api_key=659b6f94639ae8af21d0d09abc0b2cbc&language=en-US&page=1&query=${searchTerm}`
 
-    console.log('SEARCH URL IS ', searchURL)
+    const searchURL = `${API_REF.API.DETAILS_MOVIE_TEXT_SEARCH}${API_REF.API_KEY}&language=en-US&page=${page}&query=${searchTerm}`
+
+    // console.log('SEARCH URL IS ', searchURL)
 
     axiosService
       .request({
@@ -201,9 +197,8 @@ export const loadMoviesFromUserSearchText = searchTerm => async dispatch => {
         method: 'GET',
       })
       .then(async response => {
-        // console.log('response is ', response.data)
         let searchResultMovies = map(
-          response.data.results,
+          filterArr(response.data.results),
           partialRight(pick, [
             'id',
             'poster_path',
@@ -216,15 +211,15 @@ export const loadMoviesFromUserSearchText = searchTerm => async dispatch => {
 
         const movieIds = searchResultMovies.map(i => i.id)
 
-        let topUpComingIndividualMovies = await movieIds.map(
+        let searchResultIndividualMovies = await movieIds.map(
           getEachMovieDetailsGivenId,
         )
 
-        let allTopUpComingIndividualMovies = Promise.all(
-          topUpComingIndividualMovies,
+        let allSearchResultIndividualMovies = Promise.all(
+          searchResultIndividualMovies,
         )
 
-        allTopUpComingIndividualMovies
+        allSearchResultIndividualMovies
           .then(res => {
             // console.log('SEARCH RESULT RESPONSE ', res)
             dispatch({

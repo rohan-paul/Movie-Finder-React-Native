@@ -1,6 +1,5 @@
 import React from 'react'
 import { View, Image, Text } from 'react-native'
-import HelperCard from './HelperCard'
 import constants from './constants'
 import LottieView from 'lottie-react-native'
 import {
@@ -12,14 +11,6 @@ export default class StandardLoader extends React.Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <View style={{ flex: 2 }}>
-          <HelperCard
-            title={this.props.title}
-            data={this.props.data}
-            headingStyle="h1"
-          />
-        </View>
-
         <View style={{ flex: 9, alignItems: 'center', paddingTop: ch(70) }}>
           <LottieView
             source={require('../assets/lottie/loading-plane.json')}
@@ -42,8 +33,7 @@ export default class StandardLoader extends React.Component {
               width: '80%',
             }}
           >
-            Hold on till we fetch the report for you. This usually takes 3-4
-            seconds.
+            Fetching from Movie database
           </Text>
         </View>
       </View>
