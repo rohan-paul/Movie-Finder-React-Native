@@ -8,15 +8,13 @@ import {
   USER_SEARCH_TEXT,
   CLEAR_USER_SEARCH_TEXT,
   LOAD_ALL_USER_SEARCHED_MOVIES,
+  LOAD_MORE_USER_SEARCHED_MOVIES,
 } from '../actions/types'
-import mockActionPayload from '../components/utils/lib/mockActionPayload'
 
 // DONT FORGET TO CHANGE BELOW TWO COMMENTED-OUT STATES BEFORE SUBMISSION
 const initialState = {
   loading: true,
   allUpcomingMovies: [],
-  // loading: false,
-  // allUpcomingMovies: mockActionPayload,
   loadingMore: false,
   filtering: false,
   refreshing: false,
@@ -26,7 +24,6 @@ const initialState = {
 export default function(state = initialState, actions) {
   switch (actions.type) {
     case LOAD_ALL_UPCOMING_MOVIES:
-      // console.log('ACTIONS.PAYLOAD ', JSON.stringify(actions.payload))
       return {
         ...state,
         allUpcomingMovies: [...state.allUpcomingMovies, ...actions.payload],
@@ -36,14 +33,21 @@ export default function(state = initialState, actions) {
       }
 
     case LOAD_ALL_USER_SEARCHED_MOVIES:
-      // console.log('ACTIONS.PAYLOAD ', JSON.stringify(actions.payload))
       return {
         ...state,
-        // moviesFromUserSearchText: [
-        //   ...state.moviesFromUserSearchText,
-        //   ...actions.payload,
-        // ],
         moviesFromUserSearchText: actions.payload,
+        loading: false,
+        loadingMore: false,
+        refreshing: false,
+      }
+
+    case LOAD_MORE_USER_SEARCHED_MOVIES:
+      return {
+        ...state,
+        moviesFromUserSearchText: [
+          ...state.moviesFromUserSearchText,
+          ...actions.payload,
+        ],
         loading: false,
         loadingMore: false,
         refreshing: false,

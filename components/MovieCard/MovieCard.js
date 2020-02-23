@@ -17,6 +17,7 @@ const MovieCard = ({
   genre,
   formattedRuntime,
   vote_average,
+  onItemPress,
 }) => {
   return (
     <View style={styles.cardContainer}>
@@ -27,6 +28,7 @@ const MovieCard = ({
         genre={genre}
         formattedRuntime={formattedRuntime}
         vote_average={vote_average}
+        onItemPress={onItemPress}
       />
     </View>
   )

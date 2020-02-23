@@ -21,12 +21,12 @@ import constants from '../components/constants'
 
 const DrawerNavigator = createDrawerNavigator(
   {
-    PaymentDashboard: {
+    MovieListScreen: {
       screen: MovieListScreen,
       navigationOptions: {
         drawerIcon: () => (
           <Image
-            source={require('../assets/images/dollar-blue.jpeg')}
+            source={require('../assets/images/movie-image.jpg')}
             style={{ height: 25, width: 25 }}
             resizeMode={'contain'}
           />

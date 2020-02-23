@@ -12,6 +12,7 @@ import {
   USER_SEARCH_TEXT,
   CLEAR_USER_SEARCH_TEXT,
   LOAD_ALL_USER_SEARCHED_MOVIES,
+  LOAD_MORE_USER_SEARCHED_MOVIES,
 } from './types'
 import NavigationService from './NavigationService'
 import axiosService from '../apiConfig/axiosService'
@@ -19,7 +20,7 @@ import { minsToHHMM, filterArr } from '../UtilsFunctions/UtilFunctions'
 const API_REF = require('../apiConfig/apiConfig')
 const IMAGE_HOST = `https://image.tmdb.org/t/p/w500`
 
-// The below function is for merging two array-of-objects that are received from two different APIs but that share some common 'ids' of the individual elements of the array. And in this function I shall merge them based on that common id's
+// The below function is for merging two array-of-objects that are received from two different APIs but that share common 'ids' of the individual elements of the array (i.e. individual Movies).
 const mergeArraysConditionally = (listOfUpComingMovies, eachMovieDetails) => {
   let merged = []
 
@@ -35,7 +36,7 @@ const mergeArraysConditionally = (listOfUpComingMovies, eachMovieDetails) => {
       eachMovieDetails.find(j => j.id === i.id),
     ),
   )
-  // Get some of the nested value
+  // Get some of the nested values
   let modArr = merged.map(i => {
     return {
       ...i,
@@ -55,6 +56,7 @@ const mergeArraysConditionally = (listOfUpComingMovies, eachMovieDetails) => {
       'title',
       'overview',
       'vote_average',
+      'release_date',
       'genreArr',
       'castsArr',
       'formattedRuntime',
@@ -183,13 +185,7 @@ export const loadMoviesFromUserSearchText = (
       payload: true,
     })
 
-    // const URL = `${API_REF.API.INITIAL_UPCOMING_MOVIES}${page}`
-
-    // const searchURL = `https://api.themoviedb.org/3/search/movie?api_key=659b6f94639ae8af21d0d09abc0b2cbc&language=en-US&page=1&query=${searchTerm}`
-
     const searchURL = `${API_REF.API.DETAILS_MOVIE_TEXT_SEARCH}${API_REF.API_KEY}&language=en-US&page=${page}&query=${searchTerm}`
-
-    // console.log('SEARCH URL IS ', searchURL)
 
     axiosService
       .request({
@@ -224,6 +220,79 @@ export const loadMoviesFromUserSearchText = (
             // console.log('SEARCH RESULT RESPONSE ', res)
             dispatch({
               type: LOAD_ALL_USER_SEARCHED_MOVIES,
+              payload: mergeArraysConditionally(searchResultMovies, res),
+            })
+          })
+          .catch(err => {
+            console.log('ERROR IN FETCHING ALL allTopUpComingIndividualMovies ')
+            dispatch({
+              type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
+              payload: error,
+            })
+          })
+      })
+      .catch(error => {
+        dispatch({
+          type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
+          payload: error,
+        })
+      })
+  } catch (err) {
+    console.log('ERROR IS ', err)
+    dispatch({
+      type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
+      payload: error,
+    })
+  }
+}
+
+/* The below function is just the same as loadMoviesFromUserSearchText() except after successful API call, I am dispatching a different type ('LOAD_MORE_USER_SEARCHED_MOVIES') which will update the 'moviesFromUserSearchText' state by appending new api results to it.
+Its a slightly hacky way to resolve an issue, that without this extra type, the search results state, will ONLY have the new data coming from the next API request when user scrolls down, instead of getting appended to the existing data for the same search-term . I am sure, I can handle this in better way with some more time spent on it.
+ */
+export const loadMoreMoviesFromUserSameSearchText = (
+  searchTerm,
+  page,
+) => async dispatch => {
+  try {
+    dispatch({
+      type: START_USER_SEARCHING,
+      payload: true,
+    })
+
+    const searchURL = `${API_REF.API.DETAILS_MOVIE_TEXT_SEARCH}${API_REF.API_KEY}&language=en-US&page=${page}&query=${searchTerm}`
+
+    axiosService
+      .request({
+        url: searchURL,
+        method: 'GET',
+      })
+      .then(async response => {
+        let searchResultMovies = map(
+          filterArr(response.data.results),
+          partialRight(pick, [
+            'id',
+            'poster_path',
+            'title',
+            'overview',
+            'vote_average',
+            'release_date',
+          ]),
+        )
+
+        const movieIds = searchResultMovies.map(i => i.id)
+
+        let searchResultIndividualMovies = await movieIds.map(
+          getEachMovieDetailsGivenId,
+        )
+
+        let allSearchResultIndividualMovies = Promise.all(
+          searchResultIndividualMovies,
+        )
+
+        allSearchResultIndividualMovies
+          .then(res => {
+            dispatch({
+              type: LOAD_MORE_USER_SEARCHED_MOVIES,
               payload: mergeArraysConditionally(searchResultMovies, res),
             })
           })

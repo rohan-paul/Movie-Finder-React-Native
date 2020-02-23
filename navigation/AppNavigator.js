@@ -5,17 +5,17 @@ import createAnimatedSwitchNavigator from 'react-navigation-animated-switch'
 import { Transition } from 'react-native-reanimated'
 import MovieListScreen from '../screens/app/MovieListScreen/MovieListScreen'
 import DrawerNavigator from './DrawerNavigator'
-import StandardLoader from '../components/StandardLoader'
+import ShowSingleMovie from '../screens/app/ShowSingleMovie/ShowSingleMovie'
 
 const AppNavigator = createAnimatedSwitchNavigator(
   {
     Main: DrawerNavigator,
     MovieListScreen: MovieListScreen,
-    StandardLoader: StandardLoader,
+    ShowSingleMovie: ShowSingleMovie,
   },
   {
     initialRouteName: 'MovieListScreen',
-    // initialRouteName: 'StandardLoader',
+    // initialRouteName: 'ShowSingleMovie',
     backBehavior: 'history',
     transition: (
       <Transition.Together>

@@ -19,6 +19,7 @@ import {
   loadAllUpcomingMovies,
   loadMoviesFromUserSearchText,
   clearUserSearchText,
+  loadMoreMoviesFromUserSameSearchText,
 } from '../../../actions/userGeneralActions'
 import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
 import StandardLoader from '../../../components/StandardLoader'
@@ -43,7 +44,6 @@ export class MovieListScreen extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (
-      // this.props.user.userSearchedMovieText.length !== 0 &&
       prevProps.user.userSearchedMovieText !==
         this.props.user.userSearchedMovieText ||
       prevProps.user.userSearchedMovieText.length !==
@@ -78,7 +78,12 @@ export class MovieListScreen extends Component {
       },
       () => {
         const page = this.state.page
-        this.props.loadAllUpcomingMovies(page)
+        if (this.props.user.userSearchedMovieText.length === 0) {
+          this.props.loadAllUpcomingMovies(page)
+        } else {
+          let searchTerm = this.props.user.userSearchedMovieText
+          this.props.loadMoviesFromUserSearchText(searchTerm, page)
+        }
       },
     )
   }
@@ -95,14 +100,13 @@ export class MovieListScreen extends Component {
           this.props.loadAllUpcomingMovies(page)
         } else {
           let searchTerm = this.props.user.userSearchedMovieText
-          this.props.loadMoviesFromUserSearchText(searchTerm, page)
+          this.props.loadMoreMoviesFromUserSameSearchText(searchTerm, page)
         }
       },
     )
   }
 
   renderFooter = () => {
-    // if (!this.state.loadingMore) return null
     if (!this.props.user.loadingMore) return null
 
     return (
@@ -112,14 +116,12 @@ export class MovieListScreen extends Component {
     )
   }
 
+  // onItemPress = () =>
+  //   this.props.navigation.navigate('ShowSingleMovie', { item: item })
+
   render() {
     return !this.props.user.loading ? (
       <React.Fragment>
-        {/* {console.log('FETCHED DATA ', this.props.user)} */}
-        {/* {console.log(
-          'USER SEARCH TEXT ',
-          this.props.user.userSearchedMovieText,
-        )} */}
         {/* {console.log(
           'SEARCH FULL RESULT ',
           JSON.stringify(this.props.user.moviesFromUserSearchText),
@@ -141,12 +143,25 @@ export class MovieListScreen extends Component {
               }}
             >
               <MovieCard
+                item={item}
                 name={item.title}
                 imageUrl={item.poster_path}
                 casts={item.castsArr}
                 genre={item.genreArr}
                 formattedRuntime={item.formattedRuntime}
                 vote_average={item.vote_average}
+                onItemPress={() =>
+                  this.props.navigation.navigate('ShowSingleMovie', {
+                    title: item.title,
+                    poster_path: item.poster_path,
+                    overview: item.overview,
+                    castsArr: item.castsArr,
+                    genreArr: item.genreArr,
+                    formattedRuntime: item.formattedRuntime,
+                    vote_average: item.vote_average,
+                    release_date: item.release_date,
+                  })
+                }
               />
             </View>
           )}
@@ -170,6 +185,7 @@ MovieListScreen.propTypes = {
   loadAllUpcomingMovies: PropTypes.func,
   loadMoviesFromUserSearchText: PropTypes.func,
   clearUserSearchText: PropTypes.func,
+  loadMoreMoviesFromUserSameSearchText: PropTypes.func,
 }
 const mapStateToProps = state => {
   return { user: state.user }
@@ -179,6 +195,7 @@ const mapDispatchToProps = {
   loadAllUpcomingMovies,
   loadMoviesFromUserSearchText,
   clearUserSearchText,
+  loadMoreMoviesFromUserSameSearchText,
 }
 
 const styles = StyleSheet.create({

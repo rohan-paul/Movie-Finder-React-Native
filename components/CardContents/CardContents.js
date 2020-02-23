@@ -15,10 +15,11 @@ const CardContents = ({
   genre,
   formattedRuntime,
   vote_average,
+  onItemPress,
 }) => {
   return (
     <>
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={onItemPress}>
         <Image style={styles.movieImage} source={{ uri: imageUrl }} />
         <View style={styles.titleContainer}>
           <Text style={styles.movieTitle}>{name}</Text>
@@ -30,7 +31,7 @@ const CardContents = ({
           </Text>
         </View>
         <View style={styles.titleContainer}>
-          <Text style={styles.movieTitle}>{genre[0]}</Text>
+          <Text style={styles.genreText}>{genre[0]}</Text>
           <Text style={styles.vote_average}>{vote_average}</Text>
         </View>
       </TouchableOpacity>
@@ -47,7 +48,8 @@ const styles = StyleSheet.create({
     width: cw(170),
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(38, 50, 70, 0.4)',
+    borderColor: constants().GREY,
+    backgroundColor: constants().COLORS.MUTED,
   },
 
   movieImage: {
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flexDirection: 'row',
+    borderColor: constants().COLORS.PLACEHOLDER,
   },
 
   movieTitle: {
@@ -75,13 +78,26 @@ const styles = StyleSheet.create({
     fontFamily: 'NunitoSans-Regular',
     color: constants().GLOBAL_BLUE,
   },
-  formattedRuntime: {
+  genreText: {
+    width: cw(140),
+    position: 'relative',
     fontSize: cf(14),
+    fontWeight: '800',
+    lineHeight: ch(18),
+    marginTop: ch(5),
+    paddingLeft: cw(2),
+    right: 0,
+    justifyContent: 'flex-end',
+    fontFamily: 'NunitoSans-Regular',
+    color: constants().BLACK,
+  },
+  formattedRuntime: {
+    fontSize: cf(16),
     fontWeight: '800',
     marginTop: ch(5),
     justifyContent: 'flex-end',
     fontFamily: 'NunitoSans-Regular',
-    color: constants().COLORS.WARNING,
+    color: constants().COLORS.ERROR,
   },
   casts: {
     fontSize: cf(10),
