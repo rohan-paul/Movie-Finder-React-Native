@@ -8,6 +8,9 @@ import {
   LOAD_ALL_UPCOMING_MOVIES,
   LOADING_MORE,
   FILTERING,
+  USER_SEARCH_TEXT,
+  CLEAR_USER_SEARCH_TEXT,
+  LOAD_ALL_USER_SEARCHED_MOVIES,
 } from './types'
 import NavigationService from './NavigationService'
 import axiosService from '../apiConfig/axiosService'
@@ -140,6 +143,93 @@ export const loadAllUpcomingMovies = page => async dispatch => {
             dispatch({
               type: LOAD_ALL_UPCOMING_MOVIES,
               payload: mergeArraysConditionally(upcomingMovies, res),
+            })
+          })
+          .catch(err => {
+            console.log('ERROR IN FETCHING ALL allTopUpComingIndividualMovies ')
+            dispatch({
+              type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
+              payload: error,
+            })
+          })
+      })
+      .catch(error => {
+        dispatch({
+          type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
+          payload: error,
+        })
+      })
+  } catch (err) {
+    console.log('ERROR IS ', err)
+    dispatch({
+      type: ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
+      payload: error,
+    })
+  }
+}
+
+export const handleUserSearchText = text => {
+  return {
+    type: USER_SEARCH_TEXT,
+    payload: text,
+  }
+}
+
+export const clearUserSearchText = () => {
+  return {
+    type: CLEAR_USER_SEARCH_TEXT,
+    payload: '',
+  }
+}
+
+export const loadMoviesFromUserSearchText = searchTerm => async dispatch => {
+  try {
+    dispatch({
+      type: LOADING,
+      payload: true,
+    })
+
+    // const URL = `${API_REF.API.INITIAL_UPCOMING_MOVIES}${page}`
+
+    const searchURL = `https://api.themoviedb.org/3/search/movie?api_key=659b6f94639ae8af21d0d09abc0b2cbc&language=en-US&page=1&query=${searchTerm}`
+
+    console.log('SEARCH URL IS ', searchURL)
+
+    axiosService
+      .request({
+        url: searchURL,
+        method: 'GET',
+      })
+      .then(async response => {
+        // console.log('response is ', response.data)
+        let searchResultMovies = map(
+          response.data.results,
+          partialRight(pick, [
+            'id',
+            'poster_path',
+            'title',
+            'overview',
+            'vote_average',
+            'release_date',
+          ]),
+        )
+
+        const movieIds = searchResultMovies.map(i => i.id)
+
+        let topUpComingIndividualMovies = await movieIds.map(
+          getEachMovieDetailsGivenId,
+        )
+
+        let allTopUpComingIndividualMovies = Promise.all(
+          topUpComingIndividualMovies,
+        )
+
+        allTopUpComingIndividualMovies
+          .then(res => {
+            // console.log('SEARCH RESULT RESPONSE ', res)
+            dispatch({
+              type: LOAD_ALL_USER_SEARCHED_MOVIES,
+              payload: mergeArraysConditionally(searchResultMovies, res),
             })
           })
           .catch(err => {
