@@ -1,14 +1,23 @@
 ## Overall App flow
 
+- When the app launches first an animated Lottie file acts as loader while fetching initial upcoming-movie data
 - On the List page, display upcoming movies, sorted by latest first.
 - The List page allows for infinite scrolling.
 - At the top search for movies by typing movie title text, this uses the search API. Search results will be displayed on the List page itself.
 - When search is cancelled by clicking on the cross icon inside serch bar, it reverts back to showing all upcoming movies again
 - When you click on a movie card, the app stack-navigate to the Details page showing movie details. Then the on-screen back button on the details page navigates the user back to the List page.
 
-## For launching the Project in your local machine's Android Emulator.
+**Have used, Redux for state management and Thunk for middleware. Added 16 passing test, mostly to cover the Redux actions and Reducers and the util functions**
 
-- Remove completely node_modules and yarn.lock folder if it exists.
+### To run all the tests, following command in root folder
+
+```
+npm run test
+```
+
+## For launching the Project in your local machine's Android Emulator. (Note, I have not tested the app in XCode and ios emulator)
+
+- git clone the app (remove yarn.lock file if it exists).
 
 Then open a Terminal in root folder and run Commands:-
 
@@ -41,7 +50,7 @@ react-native run-android
 
 ## Possible Issue that may come up in launching project in Android Emulator and Solutions
 
-### Possible Issue - If you get error debug.keystore missing
+### Possible Issue No - 1- If you get error debug.keystore missing
 
 **Solution**
 
@@ -77,3 +86,35 @@ And run Command
 react-native run-android
 
 ```
+
+### Possible Issue No - 3 - To activate the initial Lottie file loader.
+
+The package [lottie-react-native](https://github.com/react-native-community/lottie-react-native) is suppposed to link automatically. But sometime it may not.
+
+If your app crashes on **Android**, means auto linking didn't work. Then follow their official documentation [lottie-react-native](https://github.com/react-native-community/lottie-react-native). You will need to make the following changes (I indeed had to do it in my local machine before the Lottie was showing up in my Android Emulator):
+
+**android/app/src/main/java/\<AppName\>/MainApplication.java**
+
+- add `import com.airbnb.android.react.lottie.LottiePackage;` on the imports section
+- add `packages.add(new LottiePackage());` in `List<ReactPackage> getPackages()`;
+
+**android/app/build.gradle**
+
+add `implementation project(':lottie-react-native')` in the `dependencies` block
+
+**android/settings.gradle**
+
+add:
+
+```
+include ':lottie-react-native'
+project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
+
+```
+
+### Further areas to cover if I have more time to make the app more robust and hardened.
+
+- A. Component level tests. Ideally I would try to achieve more than 80% to 90% test coverage
+
+- E. Error handling is not enough in my current code. I would want to show to the user with a snackbar or some warning message the appropriate error messages.
+- F. Fix bugs for all possible corner cases of bad data coming from external api.
