@@ -1,7 +1,8 @@
-import axios from 'axios'
-const pick = require('lodash.pick')
-const map = require('lodash.map')
-const partialRight = require('lodash.partialright')
+import axios from "axios"
+const pick = require("lodash.pick")
+const map = require("lodash.map")
+const partialRight = require("lodash.partialright")
+const sortBy = require("lodash.sortby")
 import {
   LOADING,
   ERROR_WHILE_FETCHING_UPCOMING_MOVIES,
@@ -14,11 +15,18 @@ import {
   LOAD_ALL_USER_SEARCHED_MOVIES,
   LOAD_MORE_USER_SEARCHED_MOVIES,
   CLEAR_ERROR,
-} from './types'
-import axiosService from '../apiConfig/axiosService'
-import { minsToHHMM, filterArr } from '../UtilsFunctions/UtilFunctions'
-const API_REF = require('../apiConfig/apiConfig')
+} from "./types"
+import axiosService from "../apiConfig/axiosService"
+import { minsToHHMM, filterArr } from "../UtilsFunctions/UtilFunctions"
+const API_REF = require("../apiConfig/apiConfig")
 const IMAGE_HOST = `https://image.tmdb.org/t/p/w500`
+
+const sortArrByReleaseDate = myArray => {
+  const sortedArr = sortBy(myArray, Obj => {
+    return new Date(Obj.release_date)
+  })
+  return sortedArr.reverse()
+}
 
 // The below function is for merging two array-of-objects that are received from two different APIs but that share common 'ids' of the individual elements of the array (i.e. individual Movies).
 const mergeArraysConditionally = (listOfUpComingMovies, eachMovieDetails) => {
@@ -49,17 +57,17 @@ const mergeArraysConditionally = (listOfUpComingMovies, eachMovieDetails) => {
   let arrToReturn = map(
     modArr,
     partialRight(pick, [
-      'imdb_id',
-      'id',
-      'poster_path',
-      'title',
-      'title',
-      'overview',
-      'vote_average',
-      'release_date',
-      'genreArr',
-      'castsArr',
-      'formattedRuntime',
+      "imdb_id",
+      "id",
+      "poster_path",
+      "title",
+      "title",
+      "overview",
+      "vote_average",
+      "release_date",
+      "genreArr",
+      "castsArr",
+      "formattedRuntime",
     ]),
   )
 
@@ -74,11 +82,11 @@ const getEachMovieDetailsGivenId = (id, index) => {
     axios.get(URL).then(res => {
       let movieDetails = res.data
       let result = pick(movieDetails, [
-        'id',
-        'imdb_id',
-        'genres',
-        'runtime',
-        'casts',
+        "id",
+        "imdb_id",
+        "genres",
+        "runtime",
+        "casts",
       ])
       if (
         result &&
@@ -87,7 +95,7 @@ const getEachMovieDetailsGivenId = (id, index) => {
       ) {
         resolve(result)
       } else {
-        reject(new Error('No data received'))
+        reject(new Error("No data received"))
       }
     })
   })
@@ -105,21 +113,24 @@ export const loadAllUpcomingMovies = page => async dispatch => {
     axiosService
       .request({
         url: URL,
-        method: 'GET',
+        method: "GET",
       })
       .then(async response => {
         let upcomingMovies = map(
           filterArr(response.data.results),
           partialRight(pick, [
-            'id',
-            'poster_path',
-            'title',
-            'overview',
-            'vote_average',
-            'release_date',
+            "id",
+            "poster_path",
+            "title",
+            "overview",
+            "vote_average",
+            "release_date",
           ]),
         )
 
+        upcomingMovies = sortArrByReleaseDate(upcomingMovies)
+
+        // const movieIds = upcomingMovies.map(i => i.id)
         const movieIds = upcomingMovies.map(i => i.id)
 
         let topUpComingIndividualMovies = await movieIds.map(
@@ -168,7 +179,7 @@ export const handleUserSearchText = text => {
 export const clearUserSearchText = () => {
   return {
     type: CLEAR_USER_SEARCH_TEXT,
-    payload: '',
+    payload: "",
   }
 }
 
@@ -187,20 +198,22 @@ export const loadMoviesFromUserSearchText = (
     axiosService
       .request({
         url: searchURL,
-        method: 'GET',
+        method: "GET",
       })
       .then(async response => {
         let searchResultMovies = map(
           filterArr(response.data.results),
           partialRight(pick, [
-            'id',
-            'poster_path',
-            'title',
-            'overview',
-            'vote_average',
-            'release_date',
+            "id",
+            "poster_path",
+            "title",
+            "overview",
+            "vote_average",
+            "release_date",
           ]),
         )
+
+        searchResultMovies = sortArrByReleaseDate(searchResultMovies)
 
         const movieIds = searchResultMovies.map(i => i.id)
 
@@ -258,18 +271,18 @@ export const loadMoreMoviesFromUserSameSearchText = (
     axiosService
       .request({
         url: searchURL,
-        method: 'GET',
+        method: "GET",
       })
       .then(async response => {
         let searchResultMovies = map(
           filterArr(response.data.results),
           partialRight(pick, [
-            'id',
-            'poster_path',
-            'title',
-            'overview',
-            'vote_average',
-            'release_date',
+            "id",
+            "poster_path",
+            "title",
+            "overview",
+            "vote_average",
+            "release_date",
           ]),
         )
 

@@ -1,26 +1,26 @@
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
-} from './responsive'
-import { Dimensions, PixelRatio, Platform, StatusBar } from 'react-native'
-import { getStatusBarHeight } from 'react-native-status-bar-height'
+} from "./responsive"
+import { Dimensions, PixelRatio, Platform, StatusBar } from "react-native"
+import { getStatusBarHeight } from "react-native-status-bar-height"
 import {
   responsiveHeight,
   responsiveWidth,
   responsiveFontSize,
-} from 'react-native-responsive-dimensions'
+} from "react-native-responsive-dimensions"
 
 module.exports = {
   convert_width: value => {
-    let screenWidth = Dimensions.get('window').width
+    let screenWidth = Dimensions.get("window").width
     let scaledWidth = 411.42857142857144
-    if (Platform.OS != 'ios') {
+    if (Platform.OS != "ios") {
       value = (100 * value) / scaledWidth
     } else {
       value = (100 * value) / screenWidth
     }
 
-    value = value.toString() + '%'
+    value = value.toString() + "%"
     value = wp(value)
 
     return value
@@ -30,12 +30,12 @@ module.exports = {
     let statusbar_height = getStatusBarHeight()
     let adder = 0
     let screenHeight =
-      Platform.OS == 'ios'
-        ? Dimensions.get('window').height
-        : Dimensions.get('window').height - statusbar_height
+      Platform.OS == "ios"
+        ? Dimensions.get("window").height
+        : Dimensions.get("window").height - statusbar_height
 
     let scaledHeight = 699.7142862592425
-    if (Platform.OS != 'ios') {
+    if (Platform.OS != "ios") {
       if (screenHeight > scaledHeight && statusbar_height <= 24) {
         value = (100 * value) / (screenHeight + statusbar_height)
       } else if (screenHeight > scaledHeight) {
@@ -47,7 +47,7 @@ module.exports = {
       value = (100 * value) / screenHeight
     }
 
-    value = value.toString() + '%'
+    value = value.toString() + "%"
     value = hp(value)
     return value
   },
@@ -56,12 +56,12 @@ module.exports = {
     let statusbar_height = getStatusBarHeight()
     let adder = 0
     let screenHeight =
-      Platform.OS == 'ios'
-        ? Dimensions.get('window').height
-        : Dimensions.get('window').height - statusbar_height
+      Platform.OS == "ios"
+        ? Dimensions.get("window").height
+        : Dimensions.get("window").height - statusbar_height
 
     let scaledHeight = 699.7142862592425
-    if (Platform.OS != 'ios') {
+    if (Platform.OS != "ios") {
       if (screenHeight > scaledHeight && statusbar_height <= 24) {
         value = (100 * value) / (screenHeight + statusbar_height)
       } else if (screenHeight > scaledHeight) {
@@ -85,13 +85,14 @@ module.exports = {
     let seconds = Math.floor(mins_num * 60 - hours * 3600 - minutes * 60)
 
     if (hours < 10) {
-      hours = '0' + hours
+      hours = "0" + hours
     }
     if (minutes < 10) {
-      minutes = '0' + minutes
+      minutes = "0" + minutes
     }
-    return hours + ':' + minutes
+    return hours + ":" + minutes
   },
+
   filterArr: arr => {
     return arr.filter(
       i =>
