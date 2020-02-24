@@ -12,20 +12,22 @@ import TopSearchBar from '../../../../components/TopSearchBar/TopSearchBar'
 const middlewares = [thunk]
 const mockStore = configureMockStore(middlewares)
 
-const store = mockStore({
-  user: {
-    loading: true,
-    allUpcomingMovies: [],
-    loadingMore: false,
-    filtering: false,
-    refreshing: false,
-    userSearchedMovieText: '',
-    moviesFromUserSearchText: [],
-    error_while_fetching_movie_data: false,
-  },
-})
+// const store = mockStore({
+//   user: {
+//     loading: true,
+//     allUpcomingMovies: [],
+//     loadingMore: false,
+//     filtering: false,
+//     refreshing: false,
+//     userSearchedMovieText: '',
+//     moviesFromUserSearchText: [],
+//     error_while_fetching_movie_data: false,
+//   },
+// })
 
-describe('MovieListScreen Component', () => {
+const store = configureStore()({})
+
+/* describe('MovieListScreen Component', () => {
   // it('should render a startup component if startup is not complete', () => {
   //   const wrapper = mount(
   //     <Provider store={store}>
@@ -38,4 +40,9 @@ describe('MovieListScreen Component', () => {
     const result = render(<MovieListScreen />).toJSON()
     expect(result).toMatchSnapshot()
   })
+}) */
+
+test('renders correctly', () => {
+  const tree = renderer.create(<TopSearchBar />).toJSON()
+  expect(tree).toMatchSnapshot()
 })
