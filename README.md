@@ -1,25 +1,27 @@
 <img src='./movie-finder.gif'>
 
+Movie data is coming from [https://developers.themoviedb.org/3/getting-started](https://developers.themoviedb.org/3/getting-started)
+
 ## Overall App flow
 
 - When the app launches first an animated Lottie file acts as loader while fetching initial upcoming-movie data from
-- On the List page, display upcoming movies, sorted by latest first.
+- On the List page, displaying upcoming movies, sorted by latest first.
 - The List page allows for infinite scrolling.
 - At the top search for movies by typing movie title text, this uses the search API. Search results will be displayed on the List page itself.
 - When search is cancelled by clicking on the cross icon inside search bar, it reverts back to showing all upcoming movies again
-- When you click on a movie card, the app stack-navigate to the Details page showing movie details. Then the on-screen back button on the details page navigates the user back to the List page.
+- When you click on a movie card, the app stack-navigate to the Details page showing movie details. Then the on-screen back button or the Device back button on the details page navigates the user back to the List page.
 
 **Have used, Redux for state management and Thunk for middleware. Added 16 passing test, mostly to cover the Redux actions and Reducers and the util functions**
 
-### To run all the tests, following command in root folder
+#### To run all the tests run below command in root folder
 
 ```
 npm run test
 ```
 
-## For launching the Project in your local machine's Android Emulator. (Note, I have not tested the app in XCode and ios emulator)
+### For launching the Project in your local machine's Android Emulator. (Note, I have not tested the app in XCode and ios emulator)
 
-- git clone the app (remove yarn.lock file if it exists).
+- git clone the project.
 
 Then open a Terminal in root folder and run Commands:-
 
@@ -33,6 +35,8 @@ To link fonts and assets, run below command in root folder
 react-native link
 ```
 
+Start your Android Emulator (either from Android Studio or Genymotion or anything else that you are using)
+
 Then run
 
 ```
@@ -40,7 +44,7 @@ react-native start
 
 ```
 
-Now after the above command the Metro bundler will start and it will say **Done** . Now in Terminal open a new tab in same project path.
+Now the above command will start the Metro bundler in Terminal you see **Done** . Now in Terminal open a new tab in same project root path.
 
 And run Command
 
