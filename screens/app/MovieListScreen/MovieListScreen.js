@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import React, { Component } from "react"
+import { StyleSheet } from "react-native"
+import PropTypes from "prop-types"
+import { connect } from "react-redux"
 import {
   Dimensions,
   View,
@@ -9,22 +9,22 @@ import {
   FlatList,
   ActivityIndicator,
   Text,
-} from 'react-native'
-import MovieCard from '../../../components/MovieCard/MovieCard'
-import axiosService from '../../../apiConfig/axiosService'
-const { width, height } = Dimensions.get('window')
-const API_REF = require('../../../apiConfig/apiConfig')
+} from "react-native"
+import MovieCard from "../../../components/MovieCard/MovieCard"
+import axiosService from "../../../apiConfig/axiosService"
+const { width, height } = Dimensions.get("window")
+const API_REF = require("../../../apiConfig/apiConfig")
 import {
   loadAllUpcomingMovies,
   loadMoviesFromUserSearchText,
   clearUserSearchText,
   loadMoreMoviesFromUserSameSearchText,
   clearError,
-} from '../../../actions/userGeneralActions'
-import TopSearchBar from '../../../components/TopSearchBar/TopSearchBar'
-import StandardLoader from '../../../components/StandardLoader'
-import SnackBar from 'react-native-snackbar-component'
-import constants from '../../../components/constants'
+} from "../../../actions/userGeneralActions"
+import TopSearchBar from "../../../components/TopSearchBar/TopSearchBar"
+import StandardLoader from "../../../components/StandardLoader"
+import SnackBar from "react-native-snackbar-component"
+import constants from "../../../components/constants"
 
 export class MovieListScreen extends Component {
   state = {
@@ -39,7 +39,12 @@ export class MovieListScreen extends Component {
 
   componentDidMount() {
     const page = this.state.page
-    this.props.loadAllUpcomingMovies(page)
+    if (this.props.user.userSearchedMovieText.length === 0) {
+      this.props.loadAllUpcomingMovies(page)
+    } else {
+      let searchTerm = this.props.user.userSearchedMovieText
+      this.props.loadMoviesFromUserSearchText(searchTerm, page)
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -115,8 +120,36 @@ export class MovieListScreen extends Component {
     )
   }
 
-  // onItemPress = () =>
-  //   this.props.navigation.navigate('ShowSingleMovie', { item: item })
+  renderItem = ({ item }) => (
+    <View
+      style={{
+        marginTop: 25,
+        width: "50%",
+      }}
+    >
+      <MovieCard
+        item={item}
+        name={item.title}
+        imageUrl={item.poster_path}
+        casts={item.castsArr}
+        genre={item.genreArr}
+        formattedRuntime={item.formattedRuntime}
+        vote_average={item.vote_average}
+        onItemPress={() =>
+          this.props.navigation.navigate("ShowSingleMovie", {
+            title: item.title,
+            poster_path: item.poster_path,
+            overview: item.overview,
+            castsArr: item.castsArr,
+            genreArr: item.genreArr,
+            formattedRuntime: item.formattedRuntime,
+            vote_average: item.vote_average,
+            release_date: item.release_date,
+          })
+        }
+      />
+    </View>
+  )
 
   render() {
     return !this.props.user.loading ? (
@@ -124,49 +157,22 @@ export class MovieListScreen extends Component {
         <TopSearchBar clearInput={this.clearInput}></TopSearchBar>
         <FlatList
           contentContainerStyle={{}}
+          initialNumToRender={6}
+          maxToRenderPerBatch={6}
+          removeClippedSubviews={true}
           numColumns={2}
           data={
             this.props.user.moviesFromUserSearchText.length === 0
               ? this.props.user.allUpcomingMovies
               : this.props.user.moviesFromUserSearchText
           }
-          renderItem={({ item }) => (
-            <View
-              style={{
-                marginTop: 25,
-                width: '50%',
-              }}
-            >
-              <MovieCard
-                item={item}
-                name={item.title}
-                imageUrl={item.poster_path}
-                casts={item.castsArr}
-                genre={item.genreArr}
-                formattedRuntime={item.formattedRuntime}
-                vote_average={item.vote_average}
-                onItemPress={() =>
-                  this.props.navigation.navigate('ShowSingleMovie', {
-                    title: item.title,
-                    poster_path: item.poster_path,
-                    overview: item.overview,
-                    castsArr: item.castsArr,
-                    genreArr: item.genreArr,
-                    formattedRuntime: item.formattedRuntime,
-                    vote_average: item.vote_average,
-                    release_date: item.release_date,
-                  })
-                }
-              />
-            </View>
-          )}
+          renderItem={this.renderItem}
           keyExtractor={item => item.imdb_id}
           ListFooterComponent={this.renderFooter}
           onRefresh={this.handleRefresh}
           refreshing={this.props.user.refreshing}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0.5}
-          initialNumToRender={10}
         />
         {this.props.user.error_while_fetching_movie_data ? (
           <SnackBar
@@ -219,7 +225,7 @@ const mapDispatchToProps = {
 
 const styles = StyleSheet.create({
   activityIndicator: {
-    position: 'relative',
+    position: "relative",
     width: width,
     height: height,
     paddingVertical: 20,

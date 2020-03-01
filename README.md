@@ -1,10 +1,12 @@
+<img src='./movie-finder.gif'>
+
 ## Overall App flow
 
-- When the app launches first an animated Lottie file acts as loader while fetching initial upcoming-movie data
+- When the app launches first an animated Lottie file acts as loader while fetching initial upcoming-movie data from
 - On the List page, display upcoming movies, sorted by latest first.
 - The List page allows for infinite scrolling.
 - At the top search for movies by typing movie title text, this uses the search API. Search results will be displayed on the List page itself.
-- When search is cancelled by clicking on the cross icon inside serch bar, it reverts back to showing all upcoming movies again
+- When search is cancelled by clicking on the cross icon inside search bar, it reverts back to showing all upcoming movies again
 - When you click on a movie card, the app stack-navigate to the Details page showing movie details. Then the on-screen back button on the details page navigates the user back to the List page.
 
 **Have used, Redux for state management and Thunk for middleware. Added 16 passing test, mostly to cover the Redux actions and Reducers and the util functions**
@@ -64,7 +66,7 @@ keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddeb
 
 ```
 
-### Possible Issue - Android Build Failed
+### Possible Issue No-2 - Android Build Failed after running the app once
 
 If the app already ran once in your Android Emulator and then for a subsequent time, if after running `react-native run-android` you get error that **Android Build Failed** - which could be for any number of reasons, like "Package signatures do not match the previously installed version"
 
@@ -111,10 +113,3 @@ include ':lottie-react-native'
 project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
 
 ```
-
-### Further areas to cover if I have more time to make the app more robust and hardened.
-
-- A. Component level tests. Ideally I would try to achieve more than 80% to 90% test coverage
-
-- E. Error handling is not enough in my current code. I would want to show to the user with a snackbar or some warning message the appropriate error messages.
-- F. Fix bugs for all possible corner cases of bad data coming from external api.
