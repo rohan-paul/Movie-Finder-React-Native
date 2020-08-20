@@ -1,3 +1,5 @@
+#### A weekend fun side-project done in 1st-Quarter 2020
+
 <img src='./movie-finder.gif'>
 
 Movie data is coming from [https://developers.themoviedb.org/3/getting-started](https://developers.themoviedb.org/3/getting-started)
@@ -117,3 +119,11 @@ include ':lottie-react-native'
 project(':lottie-react-native').projectDir = new File(rootProject.projectDir, '../node_modules/lottie-react-native/src/android')
 
 ```
+
+### Possible Issue No - 4 - spawnSync ./gradlew EACCES error when running react native project on emulator - Failed to install the app. Make sure you have the Android development environment set up Error
+
+I fixed this problem with:
+
+`chmod 755 android/gradlew`
+
+the chmod command sets the permissions of files or directories.
